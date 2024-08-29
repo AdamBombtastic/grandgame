@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	gen "github.com/Adambombtastic/grandgame/gen/game"
 	genserver "github.com/Adambombtastic/grandgame/gen/http/game/server"
@@ -11,6 +12,13 @@ import (
 )
 
 func main() {
+	// load the port from the environment variable
+	// if not set, default to 8080
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	s := service.New()
 
 	endpoints := gen.NewEndpoints(s)
@@ -23,7 +31,7 @@ func main() {
 	genserver.Mount(mux, svr)
 
 	httpsvr := &http.Server{
-		Addr:    "localhost:8080",
+		Addr:    "0.0.0.0:" + port,
 		Handler: mux,
 	}
 
