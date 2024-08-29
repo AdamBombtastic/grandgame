@@ -15,26 +15,60 @@ import (
 
 // Client is the "game" service client.
 type Client struct {
-	ParticipantsEndpoint goa.Endpoint
+	ListParticipantsEndpoint          goa.Endpoint
+	ListAdvantagesEndpoint            goa.Endpoint
+	ListCompetitionEventKindsEndpoint goa.Endpoint
 }
 
 // NewClient initializes a "game" service client given the endpoints.
-func NewClient(participants goa.Endpoint) *Client {
+func NewClient(listParticipants, listAdvantages, listCompetitionEventKinds goa.Endpoint) *Client {
 	return &Client{
-		ParticipantsEndpoint: participants,
+		ListParticipantsEndpoint:          listParticipants,
+		ListAdvantagesEndpoint:            listAdvantages,
+		ListCompetitionEventKindsEndpoint: listCompetitionEventKinds,
 	}
 }
 
-// Participants calls the "participants" endpoint of the "game" service.
-// Participants may return the following errors:
+// ListParticipants calls the "list_participants" endpoint of the "game"
+// service.
+// ListParticipants may return the following errors:
 //   - "not_found" (type *goa.ServiceError)
 //   - "internal_error" (type *goa.ServiceError)
 //   - error: internal error
-func (c *Client) Participants(ctx context.Context) (res []*Participant, err error) {
+func (c *Client) ListParticipants(ctx context.Context) (res []*Participant, err error) {
 	var ires any
-	ires, err = c.ParticipantsEndpoint(ctx, nil)
+	ires, err = c.ListParticipantsEndpoint(ctx, nil)
 	if err != nil {
 		return
 	}
 	return ires.([]*Participant), nil
+}
+
+// ListAdvantages calls the "list_advantages" endpoint of the "game" service.
+// ListAdvantages may return the following errors:
+//   - "not_found" (type *goa.ServiceError)
+//   - "internal_error" (type *goa.ServiceError)
+//   - error: internal error
+func (c *Client) ListAdvantages(ctx context.Context) (res []*Advantage, err error) {
+	var ires any
+	ires, err = c.ListAdvantagesEndpoint(ctx, nil)
+	if err != nil {
+		return
+	}
+	return ires.([]*Advantage), nil
+}
+
+// ListCompetitionEventKinds calls the "list_competition_event_kinds" endpoint
+// of the "game" service.
+// ListCompetitionEventKinds may return the following errors:
+//   - "not_found" (type *goa.ServiceError)
+//   - "internal_error" (type *goa.ServiceError)
+//   - error: internal error
+func (c *Client) ListCompetitionEventKinds(ctx context.Context) (res []*CompetitionEventDescription, err error) {
+	var ires any
+	ires, err = c.ListCompetitionEventKindsEndpoint(ctx, nil)
+	if err != nil {
+		return
+	}
+	return ires.([]*CompetitionEventDescription), nil
 }

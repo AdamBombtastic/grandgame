@@ -14,12 +14,16 @@ import (
 	game "github.com/Adambombtastic/grandgame/gen/game"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
+	"goa.design/plugins/v3/cors"
 )
 
 // Server lists the game service endpoint HTTP handlers.
 type Server struct {
-	Mounts       []*MountPoint
-	Participants http.Handler
+	Mounts                    []*MountPoint
+	ListParticipants          http.Handler
+	ListAdvantages            http.Handler
+	ListCompetitionEventKinds http.Handler
+	CORS                      http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -49,9 +53,17 @@ func New(
 ) *Server {
 	return &Server{
 		Mounts: []*MountPoint{
-			{"Participants", "GET", "/participants"},
+			{"ListParticipants", "GET", "/participants"},
+			{"ListAdvantages", "GET", "/advantages"},
+			{"ListCompetitionEventKinds", "GET", "/competition_events/kinds"},
+			{"CORS", "OPTIONS", "/participants"},
+			{"CORS", "OPTIONS", "/advantages"},
+			{"CORS", "OPTIONS", "/competition_events/kinds"},
 		},
-		Participants: NewParticipantsHandler(e.Participants, mux, decoder, encoder, errhandler, formatter),
+		ListParticipants:          NewListParticipantsHandler(e.ListParticipants, mux, decoder, encoder, errhandler, formatter),
+		ListAdvantages:            NewListAdvantagesHandler(e.ListAdvantages, mux, decoder, encoder, errhandler, formatter),
+		ListCompetitionEventKinds: NewListCompetitionEventKindsHandler(e.ListCompetitionEventKinds, mux, decoder, encoder, errhandler, formatter),
+		CORS:                      NewCORSHandler(),
 	}
 }
 
@@ -60,7 +72,10 @@ func (s *Server) Service() string { return "game" }
 
 // Use wraps the server handlers with the given middleware.
 func (s *Server) Use(m func(http.Handler) http.Handler) {
-	s.Participants = m(s.Participants)
+	s.ListParticipants = m(s.ListParticipants)
+	s.ListAdvantages = m(s.ListAdvantages)
+	s.ListCompetitionEventKinds = m(s.ListCompetitionEventKinds)
+	s.CORS = m(s.CORS)
 }
 
 // MethodNames returns the methods served.
@@ -68,7 +83,10 @@ func (s *Server) MethodNames() []string { return game.MethodNames[:] }
 
 // Mount configures the mux to serve the game endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
-	MountParticipantsHandler(mux, h.Participants)
+	MountListParticipantsHandler(mux, h.ListParticipants)
+	MountListAdvantagesHandler(mux, h.ListAdvantages)
+	MountListCompetitionEventKindsHandler(mux, h.ListCompetitionEventKinds)
+	MountCORSHandler(mux, h.CORS)
 }
 
 // Mount configures the mux to serve the game endpoints.
@@ -76,10 +94,10 @@ func (s *Server) Mount(mux goahttp.Muxer) {
 	Mount(mux, s)
 }
 
-// MountParticipantsHandler configures the mux to serve the "game" service
-// "participants" endpoint.
-func MountParticipantsHandler(mux goahttp.Muxer, h http.Handler) {
-	f, ok := h.(http.HandlerFunc)
+// MountListParticipantsHandler configures the mux to serve the "game" service
+// "list_participants" endpoint.
+func MountListParticipantsHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := HandleGameOrigin(h).(http.HandlerFunc)
 	if !ok {
 		f = func(w http.ResponseWriter, r *http.Request) {
 			h.ServeHTTP(w, r)
@@ -88,9 +106,9 @@ func MountParticipantsHandler(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("GET", "/participants", f)
 }
 
-// NewParticipantsHandler creates a HTTP handler which loads the HTTP request
-// and calls the "game" service "participants" endpoint.
-func NewParticipantsHandler(
+// NewListParticipantsHandler creates a HTTP handler which loads the HTTP
+// request and calls the "game" service "list_participants" endpoint.
+func NewListParticipantsHandler(
 	endpoint goa.Endpoint,
 	mux goahttp.Muxer,
 	decoder func(*http.Request) goahttp.Decoder,
@@ -99,12 +117,12 @@ func NewParticipantsHandler(
 	formatter func(ctx context.Context, err error) goahttp.Statuser,
 ) http.Handler {
 	var (
-		encodeResponse = EncodeParticipantsResponse(encoder)
-		encodeError    = EncodeParticipantsError(encoder, formatter)
+		encodeResponse = EncodeListParticipantsResponse(encoder)
+		encodeError    = EncodeListParticipantsError(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
-		ctx = context.WithValue(ctx, goa.MethodKey, "participants")
+		ctx = context.WithValue(ctx, goa.MethodKey, "list_participants")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "game")
 		var err error
 		res, err := endpoint(ctx, nil)
@@ -117,5 +135,136 @@ func NewParticipantsHandler(
 		if err := encodeResponse(ctx, w, res); err != nil {
 			errhandler(ctx, w, err)
 		}
+	})
+}
+
+// MountListAdvantagesHandler configures the mux to serve the "game" service
+// "list_advantages" endpoint.
+func MountListAdvantagesHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := HandleGameOrigin(h).(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/advantages", f)
+}
+
+// NewListAdvantagesHandler creates a HTTP handler which loads the HTTP request
+// and calls the "game" service "list_advantages" endpoint.
+func NewListAdvantagesHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		encodeResponse = EncodeListAdvantagesResponse(encoder)
+		encodeError    = EncodeListAdvantagesError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "list_advantages")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "game")
+		var err error
+		res, err := endpoint(ctx, nil)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountListCompetitionEventKindsHandler configures the mux to serve the "game"
+// service "list_competition_event_kinds" endpoint.
+func MountListCompetitionEventKindsHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := HandleGameOrigin(h).(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/competition_events/kinds", f)
+}
+
+// NewListCompetitionEventKindsHandler creates a HTTP handler which loads the
+// HTTP request and calls the "game" service "list_competition_event_kinds"
+// endpoint.
+func NewListCompetitionEventKindsHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		encodeResponse = EncodeListCompetitionEventKindsResponse(encoder)
+		encodeError    = EncodeListCompetitionEventKindsError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "list_competition_event_kinds")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "game")
+		var err error
+		res, err := endpoint(ctx, nil)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountCORSHandler configures the mux to serve the CORS endpoints for the
+// service game.
+func MountCORSHandler(mux goahttp.Muxer, h http.Handler) {
+	h = HandleGameOrigin(h)
+	mux.Handle("OPTIONS", "/participants", h.ServeHTTP)
+	mux.Handle("OPTIONS", "/advantages", h.ServeHTTP)
+	mux.Handle("OPTIONS", "/competition_events/kinds", h.ServeHTTP)
+}
+
+// NewCORSHandler creates a HTTP handler which returns a simple 204 response.
+func NewCORSHandler() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(204)
+	})
+}
+
+// HandleGameOrigin applies the CORS response headers corresponding to the
+// origin for the service game.
+func HandleGameOrigin(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		origin := r.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			h.ServeHTTP(w, r)
+			return
+		}
+		if cors.MatchOrigin(origin, "*") {
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+			w.Header().Set("Vary", "Origin")
+			if acrm := r.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				w.WriteHeader(204)
+				return
+			}
+			h.ServeHTTP(w, r)
+			return
+		}
+		h.ServeHTTP(w, r)
+		return
 	})
 }

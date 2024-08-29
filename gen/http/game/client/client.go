@@ -17,9 +17,20 @@ import (
 
 // Client lists the game service endpoint HTTP clients.
 type Client struct {
-	// Participants Doer is the HTTP client used to make requests to the
-	// participants endpoint.
-	ParticipantsDoer goahttp.Doer
+	// ListParticipants Doer is the HTTP client used to make requests to the
+	// list_participants endpoint.
+	ListParticipantsDoer goahttp.Doer
+
+	// ListAdvantages Doer is the HTTP client used to make requests to the
+	// list_advantages endpoint.
+	ListAdvantagesDoer goahttp.Doer
+
+	// ListCompetitionEventKinds Doer is the HTTP client used to make requests to
+	// the list_competition_event_kinds endpoint.
+	ListCompetitionEventKindsDoer goahttp.Doer
+
+	// CORS Doer is the HTTP client used to make requests to the  endpoint.
+	CORSDoer goahttp.Doer
 
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
@@ -41,29 +52,70 @@ func NewClient(
 	restoreBody bool,
 ) *Client {
 	return &Client{
-		ParticipantsDoer:    doer,
-		RestoreResponseBody: restoreBody,
-		scheme:              scheme,
-		host:                host,
-		decoder:             dec,
-		encoder:             enc,
+		ListParticipantsDoer:          doer,
+		ListAdvantagesDoer:            doer,
+		ListCompetitionEventKindsDoer: doer,
+		CORSDoer:                      doer,
+		RestoreResponseBody:           restoreBody,
+		scheme:                        scheme,
+		host:                          host,
+		decoder:                       dec,
+		encoder:                       enc,
 	}
 }
 
-// Participants returns an endpoint that makes HTTP requests to the game
-// service participants server.
-func (c *Client) Participants() goa.Endpoint {
+// ListParticipants returns an endpoint that makes HTTP requests to the game
+// service list_participants server.
+func (c *Client) ListParticipants() goa.Endpoint {
 	var (
-		decodeResponse = DecodeParticipantsResponse(c.decoder, c.RestoreResponseBody)
+		decodeResponse = DecodeListParticipantsResponse(c.decoder, c.RestoreResponseBody)
 	)
 	return func(ctx context.Context, v any) (any, error) {
-		req, err := c.BuildParticipantsRequest(ctx, v)
+		req, err := c.BuildListParticipantsRequest(ctx, v)
 		if err != nil {
 			return nil, err
 		}
-		resp, err := c.ParticipantsDoer.Do(req)
+		resp, err := c.ListParticipantsDoer.Do(req)
 		if err != nil {
-			return nil, goahttp.ErrRequestError("game", "participants", err)
+			return nil, goahttp.ErrRequestError("game", "list_participants", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// ListAdvantages returns an endpoint that makes HTTP requests to the game
+// service list_advantages server.
+func (c *Client) ListAdvantages() goa.Endpoint {
+	var (
+		decodeResponse = DecodeListAdvantagesResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v any) (any, error) {
+		req, err := c.BuildListAdvantagesRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.ListAdvantagesDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("game", "list_advantages", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// ListCompetitionEventKinds returns an endpoint that makes HTTP requests to
+// the game service list_competition_event_kinds server.
+func (c *Client) ListCompetitionEventKinds() goa.Endpoint {
+	var (
+		decodeResponse = DecodeListCompetitionEventKindsResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v any) (any, error) {
+		req, err := c.BuildListCompetitionEventKindsRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.ListCompetitionEventKindsDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("game", "list_competition_event_kinds", err)
 		}
 		return decodeResponse(resp)
 	}

@@ -17,21 +17,21 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// EncodeParticipantsResponse returns an encoder for responses returned by the
-// game participants endpoint.
-func EncodeParticipantsResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+// EncodeListParticipantsResponse returns an encoder for responses returned by
+// the game list_participants endpoint.
+func EncodeListParticipantsResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
 	return func(ctx context.Context, w http.ResponseWriter, v any) error {
 		res, _ := v.([]*game.Participant)
 		enc := encoder(ctx, w)
-		body := NewParticipantsResponseBody(res)
+		body := NewListParticipantsResponseBody(res)
 		w.WriteHeader(http.StatusOK)
 		return enc.Encode(body)
 	}
 }
 
-// EncodeParticipantsError returns an encoder for errors returned by the
-// participants game endpoint.
-func EncodeParticipantsError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(ctx context.Context, err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+// EncodeListParticipantsError returns an encoder for errors returned by the
+// list_participants game endpoint.
+func EncodeListParticipantsError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(ctx context.Context, err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
 	encodeError := goahttp.ErrorEncoder(encoder, formatter)
 	return func(ctx context.Context, w http.ResponseWriter, v error) error {
 		var en goa.GoaErrorNamer
@@ -47,7 +47,7 @@ func EncodeParticipantsError(encoder func(context.Context, http.ResponseWriter) 
 			if formatter != nil {
 				body = formatter(ctx, res)
 			} else {
-				body = NewParticipantsNotFoundResponseBody(res)
+				body = NewListParticipantsNotFoundResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.GoaErrorName())
 			w.WriteHeader(http.StatusNotFound)
@@ -60,7 +60,115 @@ func EncodeParticipantsError(encoder func(context.Context, http.ResponseWriter) 
 			if formatter != nil {
 				body = formatter(ctx, res)
 			} else {
-				body = NewParticipantsInternalErrorResponseBody(res)
+				body = NewListParticipantsInternalErrorResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.GoaErrorName())
+			w.WriteHeader(http.StatusInternalServerError)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
+// EncodeListAdvantagesResponse returns an encoder for responses returned by
+// the game list_advantages endpoint.
+func EncodeListAdvantagesResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
+		res, _ := v.([]*game.Advantage)
+		enc := encoder(ctx, w)
+		body := NewListAdvantagesResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// EncodeListAdvantagesError returns an encoder for errors returned by the
+// list_advantages game endpoint.
+func EncodeListAdvantagesError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(ctx context.Context, err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		var en goa.GoaErrorNamer
+		if !errors.As(v, &en) {
+			return encodeError(ctx, w, v)
+		}
+		switch en.GoaErrorName() {
+		case "not_found":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body any
+			if formatter != nil {
+				body = formatter(ctx, res)
+			} else {
+				body = NewListAdvantagesNotFoundResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.GoaErrorName())
+			w.WriteHeader(http.StatusNotFound)
+			return enc.Encode(body)
+		case "internal_error":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body any
+			if formatter != nil {
+				body = formatter(ctx, res)
+			} else {
+				body = NewListAdvantagesInternalErrorResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.GoaErrorName())
+			w.WriteHeader(http.StatusInternalServerError)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
+// EncodeListCompetitionEventKindsResponse returns an encoder for responses
+// returned by the game list_competition_event_kinds endpoint.
+func EncodeListCompetitionEventKindsResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
+		res, _ := v.([]*game.CompetitionEventDescription)
+		enc := encoder(ctx, w)
+		body := NewListCompetitionEventKindsResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// EncodeListCompetitionEventKindsError returns an encoder for errors returned
+// by the list_competition_event_kinds game endpoint.
+func EncodeListCompetitionEventKindsError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(ctx context.Context, err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		var en goa.GoaErrorNamer
+		if !errors.As(v, &en) {
+			return encodeError(ctx, w, v)
+		}
+		switch en.GoaErrorName() {
+		case "not_found":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body any
+			if formatter != nil {
+				body = formatter(ctx, res)
+			} else {
+				body = NewListCompetitionEventKindsNotFoundResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.GoaErrorName())
+			w.WriteHeader(http.StatusNotFound)
+			return enc.Encode(body)
+		case "internal_error":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body any
+			if formatter != nil {
+				body = formatter(ctx, res)
+			} else {
+				body = NewListCompetitionEventKindsInternalErrorResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.GoaErrorName())
 			w.WriteHeader(http.StatusInternalServerError)
@@ -84,6 +192,40 @@ func marshalGameParticipantToParticipantResponse(v *game.Participant) *Participa
 		Backstory: v.Backstory,
 		Gold:      v.Gold,
 		Favor:     v.Favor,
+	}
+
+	return res
+}
+
+// marshalGameAdvantageToAdvantageResponse builds a value of type
+// *AdvantageResponse from a value of type *game.Advantage.
+func marshalGameAdvantageToAdvantageResponse(v *game.Advantage) *AdvantageResponse {
+	res := &AdvantageResponse{
+		ID:          v.ID,
+		Name:        v.Name,
+		Description: v.Description,
+		Tier:        v.Tier,
+	}
+	if v.Events != nil {
+		res.Events = make([]string, len(v.Events))
+		for i, val := range v.Events {
+			res.Events[i] = val
+		}
+	} else {
+		res.Events = []string{}
+	}
+
+	return res
+}
+
+// marshalGameCompetitionEventDescriptionToCompetitionEventDescriptionResponse
+// builds a value of type *CompetitionEventDescriptionResponse from a value of
+// type *game.CompetitionEventDescription.
+func marshalGameCompetitionEventDescriptionToCompetitionEventDescriptionResponse(v *game.CompetitionEventDescription) *CompetitionEventDescriptionResponse {
+	res := &CompetitionEventDescriptionResponse{
+		ID:          v.ID,
+		Name:        v.Name,
+		Description: v.Description,
 	}
 
 	return res

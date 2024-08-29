@@ -16,7 +16,11 @@ import (
 // The game service
 type Service interface {
 	// Returns all the participants and their information
-	Participants(context.Context) (res []*Participant, err error)
+	ListParticipants(context.Context) (res []*Participant, err error)
+	// Returns all the advantages and their information
+	ListAdvantages(context.Context) (res []*Advantage, err error)
+	// Returns all the competition event kinds
+	ListCompetitionEventKinds(context.Context) (res []*CompetitionEventDescription, err error)
 }
 
 // APIName is the name of the API as defined in the design.
@@ -33,7 +37,29 @@ const ServiceName = "game"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [1]string{"participants"}
+var MethodNames = [3]string{"list_participants", "list_advantages", "list_competition_event_kinds"}
+
+type Advantage struct {
+	// Unique advantage ID
+	ID int
+	// Name of advantage
+	Name string
+	// Description of advantage
+	Description string
+	// Events that allow this advantage
+	Events []string
+	// Tier of advantage
+	Tier string
+}
+
+type CompetitionEventDescription struct {
+	// Unique competition event description ID
+	ID int
+	// Name of competition event
+	Name string
+	// Description of competition event
+	Description string
+}
 
 type Participant struct {
 	// Unique participant ID

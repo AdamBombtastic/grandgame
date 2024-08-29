@@ -15,7 +15,7 @@ func New() gen.Service {
 	return &service{}
 }
 
-func (s *service) Participants(ctx context.Context) (res []*gen.Participant, err error) {
+func (s *service) ListParticipants(ctx context.Context) (res []*gen.Participant, err error) {
 	return []*gen.Participant{
 		{
 			ID:        1,
@@ -29,4 +29,25 @@ func (s *service) Participants(ctx context.Context) (res []*gen.Participant, err
 			Favor:     100,
 		},
 	}, nil
+}
+
+func (s *service) ListAdvantages(ctx context.Context) (res []*gen.Advantage, err error) {
+	return []*gen.Advantage{
+		{
+			ID:          1,
+			Name:        "Advantage 1",
+			Description: "The first advantage",
+		},
+	}, nil
+}
+
+func (s *service) ListCompetitionEventKinds(ctx context.Context) (res []*gen.CompetitionEventDescription, err error) {
+	return []*gen.CompetitionEventDescription{
+		{
+			ID:          1,
+			Name:        "Competition Event 1",
+			Description: "The first competition event",
+		},
+	}, nil
+
 }

@@ -15,25 +15,47 @@ import (
 
 // Endpoints wraps the "game" service endpoints.
 type Endpoints struct {
-	Participants goa.Endpoint
+	ListParticipants          goa.Endpoint
+	ListAdvantages            goa.Endpoint
+	ListCompetitionEventKinds goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "game" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
-		Participants: NewParticipantsEndpoint(s),
+		ListParticipants:          NewListParticipantsEndpoint(s),
+		ListAdvantages:            NewListAdvantagesEndpoint(s),
+		ListCompetitionEventKinds: NewListCompetitionEventKindsEndpoint(s),
 	}
 }
 
 // Use applies the given middleware to all the "game" service endpoints.
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
-	e.Participants = m(e.Participants)
+	e.ListParticipants = m(e.ListParticipants)
+	e.ListAdvantages = m(e.ListAdvantages)
+	e.ListCompetitionEventKinds = m(e.ListCompetitionEventKinds)
 }
 
-// NewParticipantsEndpoint returns an endpoint function that calls the method
-// "participants" of service "game".
-func NewParticipantsEndpoint(s Service) goa.Endpoint {
+// NewListParticipantsEndpoint returns an endpoint function that calls the
+// method "list_participants" of service "game".
+func NewListParticipantsEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
-		return s.Participants(ctx)
+		return s.ListParticipants(ctx)
+	}
+}
+
+// NewListAdvantagesEndpoint returns an endpoint function that calls the method
+// "list_advantages" of service "game".
+func NewListAdvantagesEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req any) (any, error) {
+		return s.ListAdvantages(ctx)
+	}
+}
+
+// NewListCompetitionEventKindsEndpoint returns an endpoint function that calls
+// the method "list_competition_event_kinds" of service "game".
+func NewListCompetitionEventKindsEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req any) (any, error) {
+		return s.ListCompetitionEventKinds(ctx)
 	}
 }

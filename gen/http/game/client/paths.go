@@ -7,7 +7,17 @@
 
 package client
 
-// ParticipantsGamePath returns the URL path to the game service participants HTTP endpoint.
-func ParticipantsGamePath() string {
+// ListParticipantsGamePath returns the URL path to the game service list_participants HTTP endpoint.
+func ListParticipantsGamePath() string {
 	return "/participants"
+}
+
+// ListAdvantagesGamePath returns the URL path to the game service list_advantages HTTP endpoint.
+func ListAdvantagesGamePath() string {
+	return "/advantages"
+}
+
+// ListCompetitionEventKindsGamePath returns the URL path to the game service list_competition_event_kinds HTTP endpoint.
+func ListCompetitionEventKindsGamePath() string {
+	return "/competition_events/kinds"
 }

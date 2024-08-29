@@ -13,13 +13,61 @@ produces:
     - application/xml
     - application/gob
 paths:
+    /advantages:
+        get:
+            tags:
+                - game
+            summary: list_advantages game
+            description: Returns all the advantages and their information
+            operationId: game#list_advantages
+            responses:
+                "200":
+                    description: OK response.
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/AdvantageResponse'
+                "404":
+                    description: Not Found response.
+                    schema:
+                        $ref: '#/definitions/GameListAdvantagesNotFoundResponseBody'
+                "500":
+                    description: Internal Server Error response.
+                    schema:
+                        $ref: '#/definitions/GameListAdvantagesInternalErrorResponseBody'
+            schemes:
+                - http
+    /competition_events/kinds:
+        get:
+            tags:
+                - game
+            summary: list_competition_event_kinds game
+            description: Returns all the competition event kinds
+            operationId: game#list_competition_event_kinds
+            responses:
+                "200":
+                    description: OK response.
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/CompetitionEventDescriptionResponse'
+                "404":
+                    description: Not Found response.
+                    schema:
+                        $ref: '#/definitions/GameListCompetitionEventKindsNotFoundResponseBody'
+                "500":
+                    description: Internal Server Error response.
+                    schema:
+                        $ref: '#/definitions/GameListCompetitionEventKindsInternalErrorResponseBody'
+            schemes:
+                - http
     /participants:
         get:
             tags:
                 - game
-            summary: participants game
+            summary: list_participants game
             description: Returns all the participants and their information
-            operationId: game#participants
+            operationId: game#list_participants
             responses:
                 "200":
                     description: OK response.
@@ -30,15 +78,90 @@ paths:
                 "404":
                     description: Not Found response.
                     schema:
-                        $ref: '#/definitions/GameParticipantsNotFoundResponseBody'
+                        $ref: '#/definitions/GameListParticipantsNotFoundResponseBody'
                 "500":
                     description: Internal Server Error response.
                     schema:
-                        $ref: '#/definitions/GameParticipantsInternalErrorResponseBody'
+                        $ref: '#/definitions/GameListParticipantsInternalErrorResponseBody'
             schemes:
                 - http
 definitions:
-    GameParticipantsInternalErrorResponseBody:
+    AdvantageResponse:
+        title: AdvantageResponse
+        type: object
+        properties:
+            Description:
+                type: string
+                description: Description of advantage
+                example: Id magnam nam consequatur ea totam.
+            Events:
+                type: array
+                items:
+                    type: string
+                    example: Consectetur aut sunt ratione illo voluptates natus.
+                description: Events that allow this advantage
+                example:
+                    - Omnis est cum dolore ut.
+                    - In omnis non.
+                    - Consequatur voluptatum.
+                    - Iusto aperiam nihil animi.
+            Id:
+                type: integer
+                description: Unique advantage ID
+                example: 8480116710669633731
+                format: int64
+            Name:
+                type: string
+                description: Name of advantage
+                example: Voluptatem ipsam est fugiat.
+            Tier:
+                type: string
+                description: Tier of advantage
+                example: Busted
+                enum:
+                    - Slight
+                    - Major
+                    - Busted
+        example:
+            Description: Maiores vitae odit rerum.
+            Events:
+                - Perspiciatis aut odio dolor officia est.
+                - Sequi qui.
+            Id: 8956198482236671647
+            Name: Quam facere.
+            Tier: Busted
+        required:
+            - Id
+            - Name
+            - Description
+            - Events
+            - Tier
+    CompetitionEventDescriptionResponse:
+        title: CompetitionEventDescriptionResponse
+        type: object
+        properties:
+            Description:
+                type: string
+                description: Description of competition event
+                example: Et aut odit.
+            Id:
+                type: integer
+                description: Unique competition event description ID
+                example: 454275695579401491
+                format: int64
+            Name:
+                type: string
+                description: Name of competition event
+                example: Atque voluptatibus.
+        example:
+            Description: Et quis optio sequi voluptatem consequuntur ut.
+            Id: 1332868130237203961
+            Name: Sunt doloremque.
+        required:
+            - Id
+            - Name
+            - Description
+    GameListAdvantagesInternalErrorResponseBody:
         title: 'Mediatype identifier: application/vnd.goa.error; view=default'
         type: object
         properties:
@@ -61,12 +184,55 @@ definitions:
             temporary:
                 type: boolean
                 description: Is the error temporary?
-                example: false
+                example: true
             timeout:
                 type: boolean
                 description: Is the error a timeout?
                 example: false
-        description: participants_internal_error_response_body result type (default view)
+        description: list_advantages_internal_error_response_body result type (default view)
+        example:
+            fault: true
+            id: 123abc
+            message: parameter 'p' must be an integer
+            name: bad_request
+            temporary: true
+            timeout: false
+        required:
+            - name
+            - id
+            - message
+            - temporary
+            - timeout
+            - fault
+    GameListAdvantagesNotFoundResponseBody:
+        title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+        type: object
+        properties:
+            fault:
+                type: boolean
+                description: Is the error a server-side fault?
+                example: false
+            id:
+                type: string
+                description: ID is a unique identifier for this particular occurrence of the problem.
+                example: 123abc
+            message:
+                type: string
+                description: Message is a human-readable explanation specific to this occurrence of the problem.
+                example: parameter 'p' must be an integer
+            name:
+                type: string
+                description: Name is the name of this class of errors.
+                example: bad_request
+            temporary:
+                type: boolean
+                description: Is the error temporary?
+                example: true
+            timeout:
+                type: boolean
+                description: Is the error a timeout?
+                example: false
+        description: list_advantages_not_found_response_body result type (default view)
         example:
             fault: false
             id: 123abc
@@ -81,7 +247,136 @@ definitions:
             - temporary
             - timeout
             - fault
-    GameParticipantsNotFoundResponseBody:
+    GameListCompetitionEventKindsInternalErrorResponseBody:
+        title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+        type: object
+        properties:
+            fault:
+                type: boolean
+                description: Is the error a server-side fault?
+                example: false
+            id:
+                type: string
+                description: ID is a unique identifier for this particular occurrence of the problem.
+                example: 123abc
+            message:
+                type: string
+                description: Message is a human-readable explanation specific to this occurrence of the problem.
+                example: parameter 'p' must be an integer
+            name:
+                type: string
+                description: Name is the name of this class of errors.
+                example: bad_request
+            temporary:
+                type: boolean
+                description: Is the error temporary?
+                example: true
+            timeout:
+                type: boolean
+                description: Is the error a timeout?
+                example: true
+        description: list_competition_event_kinds_internal_error_response_body result type (default view)
+        example:
+            fault: true
+            id: 123abc
+            message: parameter 'p' must be an integer
+            name: bad_request
+            temporary: false
+            timeout: true
+        required:
+            - name
+            - id
+            - message
+            - temporary
+            - timeout
+            - fault
+    GameListCompetitionEventKindsNotFoundResponseBody:
+        title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+        type: object
+        properties:
+            fault:
+                type: boolean
+                description: Is the error a server-side fault?
+                example: false
+            id:
+                type: string
+                description: ID is a unique identifier for this particular occurrence of the problem.
+                example: 123abc
+            message:
+                type: string
+                description: Message is a human-readable explanation specific to this occurrence of the problem.
+                example: parameter 'p' must be an integer
+            name:
+                type: string
+                description: Name is the name of this class of errors.
+                example: bad_request
+            temporary:
+                type: boolean
+                description: Is the error temporary?
+                example: true
+            timeout:
+                type: boolean
+                description: Is the error a timeout?
+                example: false
+        description: list_competition_event_kinds_not_found_response_body result type (default view)
+        example:
+            fault: false
+            id: 123abc
+            message: parameter 'p' must be an integer
+            name: bad_request
+            temporary: false
+            timeout: false
+        required:
+            - name
+            - id
+            - message
+            - temporary
+            - timeout
+            - fault
+    GameListParticipantsInternalErrorResponseBody:
+        title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+        type: object
+        properties:
+            fault:
+                type: boolean
+                description: Is the error a server-side fault?
+                example: false
+            id:
+                type: string
+                description: ID is a unique identifier for this particular occurrence of the problem.
+                example: 123abc
+            message:
+                type: string
+                description: Message is a human-readable explanation specific to this occurrence of the problem.
+                example: parameter 'p' must be an integer
+            name:
+                type: string
+                description: Name is the name of this class of errors.
+                example: bad_request
+            temporary:
+                type: boolean
+                description: Is the error temporary?
+                example: true
+            timeout:
+                type: boolean
+                description: Is the error a timeout?
+                example: true
+        description: list_participants_internal_error_response_body result type (default view)
+        example:
+            fault: false
+            id: 123abc
+            message: parameter 'p' must be an integer
+            name: bad_request
+            temporary: false
+            timeout: false
+        required:
+            - name
+            - id
+            - message
+            - temporary
+            - timeout
+            - fault
+    GameListParticipantsNotFoundResponseBody:
         title: 'Mediatype identifier: application/vnd.goa.error; view=default'
         type: object
         properties:
@@ -108,8 +403,8 @@ definitions:
             timeout:
                 type: boolean
                 description: Is the error a timeout?
-                example: false
-        description: participants_not_found_response_body result type (default view)
+                example: true
+        description: list_participants_not_found_response_body result type (default view)
         example:
             fault: true
             id: 123abc
@@ -131,30 +426,30 @@ definitions:
             Backstory:
                 type: string
                 description: Backstory of participant
-                example: Non vel placeat atque ut.
+                example: Qui dignissimos voluptatem ipsam.
             Email:
                 type: string
                 description: Email of participant
-                example: Qui voluptatem iste sit quos accusamus.
+                example: Quo iure doloribus architecto cumque velit.
             Favor:
                 type: integer
                 description: Influence of participant
-                example: 1925194264753228056
+                example: 2714003309803552099
                 format: int64
             Gold:
                 type: integer
                 description: Gold of participant
-                example: 6582447882786407178
+                example: 4731892199166666403
                 format: int64
             Id:
                 type: integer
                 description: Unique participant ID
-                example: 8094623973123428774
+                example: 8746297636993790074
                 format: int64
             Kind:
                 type: string
                 description: Kind of participant
-                example: admin
+                example: superadmin
                 enum:
                     - player
                     - admin
@@ -162,15 +457,15 @@ definitions:
             Name:
                 type: string
                 description: Name of participant
-                example: Qui veniam vel possimus quis ex est.
+                example: Non quia quia qui deleniti.
             Phone:
                 type: string
                 description: Phone number of participant
-                example: Iusto perferendis ut quasi.
+                example: Voluptas officia nisi.
             Role:
                 type: string
                 description: Role of participant
-                example: King's Hand
+                example: Noble
                 enum:
                     - King
                     - King's Hand
@@ -178,15 +473,15 @@ definitions:
                     - Noble
                     - Mercenary
         example:
-            Backstory: Minima consectetur officia.
-            Email: Ipsum sequi temporibus harum id.
-            Favor: 6988342502517981686
-            Gold: 1419413462703561853
-            Id: 2594621686688723007
-            Kind: player
-            Name: Rerum aut cupiditate ipsam aut.
-            Phone: Velit voluptatum.
-            Role: Mercenary
+            Backstory: Velit eos.
+            Email: Itaque expedita ex.
+            Favor: 8543632858255068945
+            Gold: 5419108875568623391
+            Id: 1466269278829255293
+            Kind: admin
+            Name: Nulla harum qui nulla dicta.
+            Phone: Consequatur quia harum.
+            Role: King's Hand
         required:
             - Id
             - Name

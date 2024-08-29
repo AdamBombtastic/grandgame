@@ -6,13 +6,136 @@ info:
 servers:
     - url: http://localhost:8080
 paths:
+    /advantages:
+        get:
+            tags:
+                - game
+            summary: list_advantages game
+            description: Returns all the advantages and their information
+            operationId: game#list_advantages
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Advantage'
+                                example:
+                                    - Description: Molestiae eos minima consectetur.
+                                      Events:
+                                        - Quis delectus natus aut dolorem veritatis.
+                                        - Ipsum error alias velit veritatis.
+                                      Id: 948391608375974601
+                                      Name: Velit voluptatum.
+                                      Tier: Slight
+                                    - Description: Molestiae eos minima consectetur.
+                                      Events:
+                                        - Quis delectus natus aut dolorem veritatis.
+                                        - Ipsum error alias velit veritatis.
+                                      Id: 948391608375974601
+                                      Name: Velit voluptatum.
+                                      Tier: Slight
+                            example:
+                                - Description: Molestiae eos minima consectetur.
+                                  Events:
+                                    - Quis delectus natus aut dolorem veritatis.
+                                    - Ipsum error alias velit veritatis.
+                                  Id: 948391608375974601
+                                  Name: Velit voluptatum.
+                                  Tier: Slight
+                                - Description: Molestiae eos minima consectetur.
+                                  Events:
+                                    - Quis delectus natus aut dolorem veritatis.
+                                    - Ipsum error alias velit veritatis.
+                                  Id: 948391608375974601
+                                  Name: Velit voluptatum.
+                                  Tier: Slight
+                                - Description: Molestiae eos minima consectetur.
+                                  Events:
+                                    - Quis delectus natus aut dolorem veritatis.
+                                    - Ipsum error alias velit veritatis.
+                                  Id: 948391608375974601
+                                  Name: Velit voluptatum.
+                                  Tier: Slight
+                                - Description: Molestiae eos minima consectetur.
+                                  Events:
+                                    - Quis delectus natus aut dolorem veritatis.
+                                    - Ipsum error alias velit veritatis.
+                                  Id: 948391608375974601
+                                  Name: Velit voluptatum.
+                                  Tier: Slight
+                "404":
+                    description: 'not_found: Not Found response.'
+                    content:
+                        application/vnd.goa.error:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                "500":
+                    description: 'internal_error: Internal Server Error response.'
+                    content:
+                        application/vnd.goa.error:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+    /competition_events/kinds:
+        get:
+            tags:
+                - game
+            summary: list_competition_event_kinds game
+            description: Returns all the competition event kinds
+            operationId: game#list_competition_event_kinds
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/CompetitionEventDescription'
+                                example:
+                                    - Description: Magni distinctio ut.
+                                      Id: 3907655099444658144
+                                      Name: Quos quod qui aut id et.
+                                    - Description: Magni distinctio ut.
+                                      Id: 3907655099444658144
+                                      Name: Quos quod qui aut id et.
+                                    - Description: Magni distinctio ut.
+                                      Id: 3907655099444658144
+                                      Name: Quos quod qui aut id et.
+                                    - Description: Magni distinctio ut.
+                                      Id: 3907655099444658144
+                                      Name: Quos quod qui aut id et.
+                            example:
+                                - Description: Magni distinctio ut.
+                                  Id: 3907655099444658144
+                                  Name: Quos quod qui aut id et.
+                                - Description: Magni distinctio ut.
+                                  Id: 3907655099444658144
+                                  Name: Quos quod qui aut id et.
+                                - Description: Magni distinctio ut.
+                                  Id: 3907655099444658144
+                                  Name: Quos quod qui aut id et.
+                "404":
+                    description: 'not_found: Not Found response.'
+                    content:
+                        application/vnd.goa.error:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                "500":
+                    description: 'internal_error: Internal Server Error response.'
+                    content:
+                        application/vnd.goa.error:
+                            schema:
+                                $ref: '#/components/schemas/Error'
     /participants:
         get:
             tags:
                 - game
-            summary: participants game
+            summary: list_participants game
             description: Returns all the participants and their information
-            operationId: game#participants
+            operationId: game#list_participants
             responses:
                 "200":
                     description: OK response.
@@ -23,43 +146,79 @@ paths:
                                 items:
                                     $ref: '#/components/schemas/Participant'
                                 example:
-                                    - Backstory: Vel aut ut dicta quia fugiat.
-                                      Email: Asperiores iure.
-                                      Favor: 7645472721040888641
-                                      Gold: 2573038020556240863
-                                      Id: 6714609331494260923
-                                      Kind: admin
-                                      Name: Aut harum quis.
-                                      Phone: Expedita eum atque voluptatem.
-                                      Role: Mercenary
-                                    - Backstory: Vel aut ut dicta quia fugiat.
-                                      Email: Asperiores iure.
-                                      Favor: 7645472721040888641
-                                      Gold: 2573038020556240863
-                                      Id: 6714609331494260923
-                                      Kind: admin
-                                      Name: Aut harum quis.
-                                      Phone: Expedita eum atque voluptatem.
-                                      Role: Mercenary
+                                    - Backstory: Atque ut.
+                                      Email: Voluptatem iste sit quos accusamus dignissimos iusto.
+                                      Favor: 1925194264753228056
+                                      Gold: 6582447882786407178
+                                      Id: 2638145879694308540
+                                      Kind: superadmin
+                                      Name: Vel possimus quis ex est omnis.
+                                      Phone: Ut quasi ducimus corrupti ducimus.
+                                      Role: King's Hand
+                                    - Backstory: Atque ut.
+                                      Email: Voluptatem iste sit quos accusamus dignissimos iusto.
+                                      Favor: 1925194264753228056
+                                      Gold: 6582447882786407178
+                                      Id: 2638145879694308540
+                                      Kind: superadmin
+                                      Name: Vel possimus quis ex est omnis.
+                                      Phone: Ut quasi ducimus corrupti ducimus.
+                                      Role: King's Hand
+                                    - Backstory: Atque ut.
+                                      Email: Voluptatem iste sit quos accusamus dignissimos iusto.
+                                      Favor: 1925194264753228056
+                                      Gold: 6582447882786407178
+                                      Id: 2638145879694308540
+                                      Kind: superadmin
+                                      Name: Vel possimus quis ex est omnis.
+                                      Phone: Ut quasi ducimus corrupti ducimus.
+                                      Role: King's Hand
+                                    - Backstory: Atque ut.
+                                      Email: Voluptatem iste sit quos accusamus dignissimos iusto.
+                                      Favor: 1925194264753228056
+                                      Gold: 6582447882786407178
+                                      Id: 2638145879694308540
+                                      Kind: superadmin
+                                      Name: Vel possimus quis ex est omnis.
+                                      Phone: Ut quasi ducimus corrupti ducimus.
+                                      Role: King's Hand
                             example:
-                                - Backstory: Vel aut ut dicta quia fugiat.
-                                  Email: Asperiores iure.
-                                  Favor: 7645472721040888641
-                                  Gold: 2573038020556240863
-                                  Id: 6714609331494260923
-                                  Kind: admin
-                                  Name: Aut harum quis.
-                                  Phone: Expedita eum atque voluptatem.
-                                  Role: Mercenary
-                                - Backstory: Vel aut ut dicta quia fugiat.
-                                  Email: Asperiores iure.
-                                  Favor: 7645472721040888641
-                                  Gold: 2573038020556240863
-                                  Id: 6714609331494260923
-                                  Kind: admin
-                                  Name: Aut harum quis.
-                                  Phone: Expedita eum atque voluptatem.
-                                  Role: Mercenary
+                                - Backstory: Atque ut.
+                                  Email: Voluptatem iste sit quos accusamus dignissimos iusto.
+                                  Favor: 1925194264753228056
+                                  Gold: 6582447882786407178
+                                  Id: 2638145879694308540
+                                  Kind: superadmin
+                                  Name: Vel possimus quis ex est omnis.
+                                  Phone: Ut quasi ducimus corrupti ducimus.
+                                  Role: King's Hand
+                                - Backstory: Atque ut.
+                                  Email: Voluptatem iste sit quos accusamus dignissimos iusto.
+                                  Favor: 1925194264753228056
+                                  Gold: 6582447882786407178
+                                  Id: 2638145879694308540
+                                  Kind: superadmin
+                                  Name: Vel possimus quis ex est omnis.
+                                  Phone: Ut quasi ducimus corrupti ducimus.
+                                  Role: King's Hand
+                                - Backstory: Atque ut.
+                                  Email: Voluptatem iste sit quos accusamus dignissimos iusto.
+                                  Favor: 1925194264753228056
+                                  Gold: 6582447882786407178
+                                  Id: 2638145879694308540
+                                  Kind: superadmin
+                                  Name: Vel possimus quis ex est omnis.
+                                  Phone: Ut quasi ducimus corrupti ducimus.
+                                  Role: King's Hand
+                                - Backstory: Atque ut.
+                                  Email: Voluptatem iste sit quos accusamus dignissimos iusto.
+                                  Favor: 1925194264753228056
+                                  Gold: 6582447882786407178
+                                  Id: 2638145879694308540
+                                  Kind: superadmin
+                                  Name: Vel possimus quis ex est omnis.
+                                  Phone: Ut quasi ducimus corrupti ducimus.
+                                  Role: King's Hand
                 "404":
                     description: 'not_found: Not Found response.'
                     content:
@@ -74,6 +233,80 @@ paths:
                                 $ref: '#/components/schemas/Error'
 components:
     schemas:
+        Advantage:
+            type: object
+            properties:
+                Description:
+                    type: string
+                    description: Description of advantage
+                    example: Minima qui quia id animi vero.
+                Events:
+                    type: array
+                    items:
+                        type: string
+                        example: Ex iusto corrupti cupiditate molestiae architecto.
+                    description: Events that allow this advantage
+                    example:
+                        - Qui culpa.
+                        - Vero autem sed.
+                        - Libero deleniti quo culpa.
+                Id:
+                    type: integer
+                    description: Unique advantage ID
+                    example: 4386085273050293581
+                    format: int64
+                Name:
+                    type: string
+                    description: Name of advantage
+                    example: Doloribus voluptas.
+                Tier:
+                    type: string
+                    description: Tier of advantage
+                    example: Slight
+                    enum:
+                        - Slight
+                        - Major
+                        - Busted
+            example:
+                Description: Nam sed aliquid.
+                Events:
+                    - Commodi cupiditate.
+                    - Tempore qui dignissimos quia.
+                    - Repellat sit dolorum autem accusamus veritatis.
+                    - Temporibus consequatur.
+                Id: 9046867846610255029
+                Name: Perferendis et at.
+                Tier: Slight
+            required:
+                - Id
+                - Name
+                - Description
+                - Events
+                - Tier
+        CompetitionEventDescription:
+            type: object
+            properties:
+                Description:
+                    type: string
+                    description: Description of competition event
+                    example: Velit repellendus minima dolor assumenda.
+                Id:
+                    type: integer
+                    description: Unique competition event description ID
+                    example: 17414346351271040
+                    format: int64
+                Name:
+                    type: string
+                    description: Name of competition event
+                    example: Vero pariatur consectetur ut qui.
+            example:
+                Description: Et corporis nemo iure ipsa.
+                Id: 8420353116493384274
+                Name: Perspiciatis sed minima ipsa neque qui alias.
+            required:
+                - Id
+                - Name
+                - Description
         Error:
             type: object
             properties:
@@ -96,13 +329,13 @@ components:
                 temporary:
                     type: boolean
                     description: Is the error temporary?
-                    example: true
+                    example: false
                 timeout:
                     type: boolean
                     description: Is the error a timeout?
-                    example: true
+                    example: false
             example:
-                fault: true
+                fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
@@ -121,30 +354,30 @@ components:
                 Backstory:
                     type: string
                     description: Backstory of participant
-                    example: Ut expedita nisi cumque voluptas soluta rerum.
+                    example: Aut rem.
                 Email:
                     type: string
                     description: Email of participant
-                    example: Molestiae quos quod.
+                    example: Aut est fugiat.
                 Favor:
                     type: integer
                     description: Influence of participant
-                    example: 5618834925810290935
+                    example: 4713314147380395845
                     format: int64
                 Gold:
                     type: integer
                     description: Gold of participant
-                    example: 8883559483147559221
+                    example: 2444098034698287365
                     format: int64
                 Id:
                     type: integer
                     description: Unique participant ID
-                    example: 7016498748787079746
+                    example: 1057082412725550984
                     format: int64
                 Kind:
                     type: string
                     description: Kind of participant
-                    example: superadmin
+                    example: admin
                     enum:
                         - player
                         - admin
@@ -152,15 +385,15 @@ components:
                 Name:
                     type: string
                     description: Name of participant
-                    example: Doloribus autem at minima eos quo ad.
+                    example: Eum ratione accusamus quae atque accusantium.
                 Phone:
                     type: string
                     description: Phone number of participant
-                    example: Aut id et.
+                    example: Sit molestias ducimus ab ipsa nisi.
                 Role:
                     type: string
                     description: Role of participant
-                    example: Archvizier
+                    example: Noble
                     enum:
                         - King
                         - King's Hand
@@ -168,15 +401,15 @@ components:
                         - Noble
                         - Mercenary
             example:
-                Backstory: Facilis voluptas officia nisi minima tempora.
-                Email: Quia qui.
-                Favor: 8569499535542018138
-                Gold: 6860978002857831485
-                Id: 4972297337208568907
+                Backstory: Nostrum quia et iste accusamus veniam.
+                Email: Quisquam occaecati.
+                Favor: 6293461467315626316
+                Gold: 5007077504528860614
+                Id: 4586142587337907647
                 Kind: admin
-                Name: Architecto non.
-                Phone: Dolore quo iure doloribus.
-                Role: Mercenary
+                Name: Laboriosam amet praesentium.
+                Phone: Alias error sapiente et laboriosam voluptas.
+                Role: Noble
             required:
                 - Id
                 - Name

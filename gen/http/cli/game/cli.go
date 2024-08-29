@@ -22,13 +22,13 @@ import (
 //
 //	command (subcommand1|subcommand2|...)
 func UsageCommands() string {
-	return `game participants
+	return `game (list-participants|list-advantages|list-competition-event-kinds)
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` game participants` + "\n" +
+	return os.Args[0] + ` game list-participants` + "\n" +
 		""
 }
 
@@ -44,10 +44,16 @@ func ParseEndpoint(
 	var (
 		gameFlags = flag.NewFlagSet("game", flag.ContinueOnError)
 
-		gameParticipantsFlags = flag.NewFlagSet("participants", flag.ExitOnError)
+		gameListParticipantsFlags = flag.NewFlagSet("list-participants", flag.ExitOnError)
+
+		gameListAdvantagesFlags = flag.NewFlagSet("list-advantages", flag.ExitOnError)
+
+		gameListCompetitionEventKindsFlags = flag.NewFlagSet("list-competition-event-kinds", flag.ExitOnError)
 	)
 	gameFlags.Usage = gameUsage
-	gameParticipantsFlags.Usage = gameParticipantsUsage
+	gameListParticipantsFlags.Usage = gameListParticipantsUsage
+	gameListAdvantagesFlags.Usage = gameListAdvantagesUsage
+	gameListCompetitionEventKindsFlags.Usage = gameListCompetitionEventKindsUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -83,8 +89,14 @@ func ParseEndpoint(
 		switch svcn {
 		case "game":
 			switch epn {
-			case "participants":
-				epf = gameParticipantsFlags
+			case "list-participants":
+				epf = gameListParticipantsFlags
+
+			case "list-advantages":
+				epf = gameListAdvantagesFlags
+
+			case "list-competition-event-kinds":
+				epf = gameListCompetitionEventKindsFlags
 
 			}
 
@@ -111,8 +123,12 @@ func ParseEndpoint(
 		case "game":
 			c := gamec.NewClient(scheme, host, doer, enc, dec, restore)
 			switch epn {
-			case "participants":
-				endpoint = c.Participants()
+			case "list-participants":
+				endpoint = c.ListParticipants()
+			case "list-advantages":
+				endpoint = c.ListAdvantages()
+			case "list-competition-event-kinds":
+				endpoint = c.ListCompetitionEventKinds()
 			}
 		}
 	}
@@ -130,18 +146,40 @@ Usage:
     %[1]s [globalflags] game COMMAND [flags]
 
 COMMAND:
-    participants: Returns all the participants and their information
+    list-participants: Returns all the participants and their information
+    list-advantages: Returns all the advantages and their information
+    list-competition-event-kinds: Returns all the competition event kinds
 
 Additional help:
     %[1]s game COMMAND --help
 `, os.Args[0])
 }
-func gameParticipantsUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] game participants
+func gameListParticipantsUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] game list-participants
 
 Returns all the participants and their information
 
 Example:
-    %[1]s game participants
+    %[1]s game list-participants
+`, os.Args[0])
+}
+
+func gameListAdvantagesUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] game list-advantages
+
+Returns all the advantages and their information
+
+Example:
+    %[1]s game list-advantages
+`, os.Args[0])
+}
+
+func gameListCompetitionEventKindsUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] game list-competition-event-kinds
+
+Returns all the competition event kinds
+
+Example:
+    %[1]s game list-competition-event-kinds
 `, os.Args[0])
 }

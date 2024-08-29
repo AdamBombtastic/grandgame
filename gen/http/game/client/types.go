@@ -12,13 +12,21 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// ParticipantsResponseBody is the type of the "game" service "participants"
-// endpoint HTTP response body.
-type ParticipantsResponseBody []*ParticipantResponse
+// ListParticipantsResponseBody is the type of the "game" service
+// "list_participants" endpoint HTTP response body.
+type ListParticipantsResponseBody []*ParticipantResponse
 
-// ParticipantsNotFoundResponseBody is the type of the "game" service
-// "participants" endpoint HTTP response body for the "not_found" error.
-type ParticipantsNotFoundResponseBody struct {
+// ListAdvantagesResponseBody is the type of the "game" service
+// "list_advantages" endpoint HTTP response body.
+type ListAdvantagesResponseBody []*AdvantageResponse
+
+// ListCompetitionEventKindsResponseBody is the type of the "game" service
+// "list_competition_event_kinds" endpoint HTTP response body.
+type ListCompetitionEventKindsResponseBody []*CompetitionEventDescriptionResponse
+
+// ListParticipantsNotFoundResponseBody is the type of the "game" service
+// "list_participants" endpoint HTTP response body for the "not_found" error.
+type ListParticipantsNotFoundResponseBody struct {
 	// Name is the name of this class of errors.
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -34,9 +42,84 @@ type ParticipantsNotFoundResponseBody struct {
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
-// ParticipantsInternalErrorResponseBody is the type of the "game" service
-// "participants" endpoint HTTP response body for the "internal_error" error.
-type ParticipantsInternalErrorResponseBody struct {
+// ListParticipantsInternalErrorResponseBody is the type of the "game" service
+// "list_participants" endpoint HTTP response body for the "internal_error"
+// error.
+type ListParticipantsInternalErrorResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// ListAdvantagesNotFoundResponseBody is the type of the "game" service
+// "list_advantages" endpoint HTTP response body for the "not_found" error.
+type ListAdvantagesNotFoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// ListAdvantagesInternalErrorResponseBody is the type of the "game" service
+// "list_advantages" endpoint HTTP response body for the "internal_error" error.
+type ListAdvantagesInternalErrorResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// ListCompetitionEventKindsNotFoundResponseBody is the type of the "game"
+// service "list_competition_event_kinds" endpoint HTTP response body for the
+// "not_found" error.
+type ListCompetitionEventKindsNotFoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// ListCompetitionEventKindsInternalErrorResponseBody is the type of the "game"
+// service "list_competition_event_kinds" endpoint HTTP response body for the
+// "internal_error" error.
+type ListCompetitionEventKindsInternalErrorResponseBody struct {
 	// Name is the name of this class of errors.
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -74,9 +157,34 @@ type ParticipantResponse struct {
 	Favor *int `form:"Favor,omitempty" json:"Favor,omitempty" xml:"Favor,omitempty"`
 }
 
-// NewParticipantsParticipantOK builds a "game" service "participants" endpoint
-// result from a HTTP "OK" response.
-func NewParticipantsParticipantOK(body []*ParticipantResponse) []*game.Participant {
+// AdvantageResponse is used to define fields on response body types.
+type AdvantageResponse struct {
+	// Unique advantage ID
+	ID *int `form:"Id,omitempty" json:"Id,omitempty" xml:"Id,omitempty"`
+	// Name of advantage
+	Name *string `form:"Name,omitempty" json:"Name,omitempty" xml:"Name,omitempty"`
+	// Description of advantage
+	Description *string `form:"Description,omitempty" json:"Description,omitempty" xml:"Description,omitempty"`
+	// Events that allow this advantage
+	Events []string `form:"Events,omitempty" json:"Events,omitempty" xml:"Events,omitempty"`
+	// Tier of advantage
+	Tier *string `form:"Tier,omitempty" json:"Tier,omitempty" xml:"Tier,omitempty"`
+}
+
+// CompetitionEventDescriptionResponse is used to define fields on response
+// body types.
+type CompetitionEventDescriptionResponse struct {
+	// Unique competition event description ID
+	ID *int `form:"Id,omitempty" json:"Id,omitempty" xml:"Id,omitempty"`
+	// Name of competition event
+	Name *string `form:"Name,omitempty" json:"Name,omitempty" xml:"Name,omitempty"`
+	// Description of competition event
+	Description *string `form:"Description,omitempty" json:"Description,omitempty" xml:"Description,omitempty"`
+}
+
+// NewListParticipantsParticipantOK builds a "game" service "list_participants"
+// endpoint result from a HTTP "OK" response.
+func NewListParticipantsParticipantOK(body []*ParticipantResponse) []*game.Participant {
 	v := make([]*game.Participant, len(body))
 	for i, val := range body {
 		v[i] = unmarshalParticipantResponseToGameParticipant(val)
@@ -85,9 +193,9 @@ func NewParticipantsParticipantOK(body []*ParticipantResponse) []*game.Participa
 	return v
 }
 
-// NewParticipantsNotFound builds a game service participants endpoint
+// NewListParticipantsNotFound builds a game service list_participants endpoint
 // not_found error.
-func NewParticipantsNotFound(body *ParticipantsNotFoundResponseBody) *goa.ServiceError {
+func NewListParticipantsNotFound(body *ListParticipantsNotFoundResponseBody) *goa.ServiceError {
 	v := &goa.ServiceError{
 		Name:      *body.Name,
 		ID:        *body.ID,
@@ -100,9 +208,9 @@ func NewParticipantsNotFound(body *ParticipantsNotFoundResponseBody) *goa.Servic
 	return v
 }
 
-// NewParticipantsInternalError builds a game service participants endpoint
-// internal_error error.
-func NewParticipantsInternalError(body *ParticipantsInternalErrorResponseBody) *goa.ServiceError {
+// NewListParticipantsInternalError builds a game service list_participants
+// endpoint internal_error error.
+func NewListParticipantsInternalError(body *ListParticipantsInternalErrorResponseBody) *goa.ServiceError {
 	v := &goa.ServiceError{
 		Name:      *body.Name,
 		ID:        *body.ID,
@@ -115,9 +223,92 @@ func NewParticipantsInternalError(body *ParticipantsInternalErrorResponseBody) *
 	return v
 }
 
-// ValidateParticipantsNotFoundResponseBody runs the validations defined on
-// participants_not_found_response_body
-func ValidateParticipantsNotFoundResponseBody(body *ParticipantsNotFoundResponseBody) (err error) {
+// NewListAdvantagesAdvantageOK builds a "game" service "list_advantages"
+// endpoint result from a HTTP "OK" response.
+func NewListAdvantagesAdvantageOK(body []*AdvantageResponse) []*game.Advantage {
+	v := make([]*game.Advantage, len(body))
+	for i, val := range body {
+		v[i] = unmarshalAdvantageResponseToGameAdvantage(val)
+	}
+
+	return v
+}
+
+// NewListAdvantagesNotFound builds a game service list_advantages endpoint
+// not_found error.
+func NewListAdvantagesNotFound(body *ListAdvantagesNotFoundResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+
+	return v
+}
+
+// NewListAdvantagesInternalError builds a game service list_advantages
+// endpoint internal_error error.
+func NewListAdvantagesInternalError(body *ListAdvantagesInternalErrorResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+
+	return v
+}
+
+// NewListCompetitionEventKindsCompetitionEventDescriptionOK builds a "game"
+// service "list_competition_event_kinds" endpoint result from a HTTP "OK"
+// response.
+func NewListCompetitionEventKindsCompetitionEventDescriptionOK(body []*CompetitionEventDescriptionResponse) []*game.CompetitionEventDescription {
+	v := make([]*game.CompetitionEventDescription, len(body))
+	for i, val := range body {
+		v[i] = unmarshalCompetitionEventDescriptionResponseToGameCompetitionEventDescription(val)
+	}
+
+	return v
+}
+
+// NewListCompetitionEventKindsNotFound builds a game service
+// list_competition_event_kinds endpoint not_found error.
+func NewListCompetitionEventKindsNotFound(body *ListCompetitionEventKindsNotFoundResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+
+	return v
+}
+
+// NewListCompetitionEventKindsInternalError builds a game service
+// list_competition_event_kinds endpoint internal_error error.
+func NewListCompetitionEventKindsInternalError(body *ListCompetitionEventKindsInternalErrorResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+
+	return v
+}
+
+// ValidateListParticipantsNotFoundResponseBody runs the validations defined on
+// list_participants_not_found_response_body
+func ValidateListParticipantsNotFoundResponseBody(body *ListParticipantsNotFoundResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}
@@ -139,9 +330,106 @@ func ValidateParticipantsNotFoundResponseBody(body *ParticipantsNotFoundResponse
 	return
 }
 
-// ValidateParticipantsInternalErrorResponseBody runs the validations defined
-// on participants_internal_error_response_body
-func ValidateParticipantsInternalErrorResponseBody(body *ParticipantsInternalErrorResponseBody) (err error) {
+// ValidateListParticipantsInternalErrorResponseBody runs the validations
+// defined on list_participants_internal_error_response_body
+func ValidateListParticipantsInternalErrorResponseBody(body *ListParticipantsInternalErrorResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateListAdvantagesNotFoundResponseBody runs the validations defined on
+// list_advantages_not_found_response_body
+func ValidateListAdvantagesNotFoundResponseBody(body *ListAdvantagesNotFoundResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateListAdvantagesInternalErrorResponseBody runs the validations defined
+// on list_advantages_internal_error_response_body
+func ValidateListAdvantagesInternalErrorResponseBody(body *ListAdvantagesInternalErrorResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateListCompetitionEventKindsNotFoundResponseBody runs the validations
+// defined on list_competition_event_kinds_not_found_response_body
+func ValidateListCompetitionEventKindsNotFoundResponseBody(body *ListCompetitionEventKindsNotFoundResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateListCompetitionEventKindsInternalErrorResponseBody runs the
+// validations defined on
+// list_competition_event_kinds_internal_error_response_body
+func ValidateListCompetitionEventKindsInternalErrorResponseBody(body *ListCompetitionEventKindsInternalErrorResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}
@@ -202,6 +490,46 @@ func ValidateParticipantResponse(body *ParticipantResponse) (err error) {
 		if !(*body.Role == "King" || *body.Role == "King's Hand" || *body.Role == "Archvizier" || *body.Role == "Noble" || *body.Role == "Mercenary") {
 			err = goa.MergeErrors(err, goa.InvalidEnumValueError("body.Role", *body.Role, []any{"King", "King's Hand", "Archvizier", "Noble", "Mercenary"}))
 		}
+	}
+	return
+}
+
+// ValidateAdvantageResponse runs the validations defined on AdvantageResponse
+func ValidateAdvantageResponse(body *AdvantageResponse) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("Id", "body"))
+	}
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("Name", "body"))
+	}
+	if body.Description == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("Description", "body"))
+	}
+	if body.Events == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("Events", "body"))
+	}
+	if body.Tier == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("Tier", "body"))
+	}
+	if body.Tier != nil {
+		if !(*body.Tier == "Slight" || *body.Tier == "Major" || *body.Tier == "Busted") {
+			err = goa.MergeErrors(err, goa.InvalidEnumValueError("body.Tier", *body.Tier, []any{"Slight", "Major", "Busted"}))
+		}
+	}
+	return
+}
+
+// ValidateCompetitionEventDescriptionResponse runs the validations defined on
+// CompetitionEventDescriptionResponse
+func ValidateCompetitionEventDescriptionResponse(body *CompetitionEventDescriptionResponse) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("Id", "body"))
+	}
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("Name", "body"))
+	}
+	if body.Description == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("Description", "body"))
 	}
 	return
 }
